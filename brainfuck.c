@@ -1,29 +1,33 @@
 #include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#include <stddef.h>
 #include <stdbool.h>
 
-char* program = ",[.[-],]";
-int8_t cells[30000];
+extern void term_putchar(char c);
+extern size_t strlen(const char* str);
+
+//char* program = ",[.[-],]";
+char* program = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.++++++++++++++++++++++++++++++++++++++.---------------------.++++++++++.---------.++++++++++++++++++++.";
+uint8_t cells[30000];
 uint32_t cellpos = 0;
 
 int getNewCellPos(uint8_t direction) {
-	uint32_t newpos = cellpos + direction;
-	if(cellpos < 0) {
+	int32_t newpos = cellpos + direction;
+	uint32_t newpos2 = cellpos + direction;
+	if(newpos < 0) {
 		return sizeof(cells);
-	} else if(cellpos > sizeof(cells)-1) {
+	} else if(newpos2 > sizeof(cells)-1) {
 		return 0;
 	} else {
 		return newpos;
 	}
 }
 
-void main() {
-	for(int i = 0; i < sizeof(cells); i++) {
+void brainfuck_main() {
+	for(uint32_t i = 0; i < sizeof(cells); i++) {
 		cells[i] = 0;
 	}
 
-	for(int i = 0; i < strlen(program); i++) {
+	for(uint32_t i = 0; i < strlen(program); i++) {
 		if(program[i] == '>') {
 			// Go up one cell
 			cellpos = getNewCellPos(1);
@@ -42,11 +46,11 @@ void main() {
 
 		} else if(program[i] == '.') {
 			// Print number in cell
-			printf("%c", cells[cellpos]);
+			term_putchar(cells[cellpos]);
 
 		} else if(program[i] == ',') {
 			// Get input character
-			cells[cellpos] = getchar();
+			//cells[cellpos] = getchar();
 
 		} else if(program[i] == '[' && cells[cellpos] == 0) {
 			// If the beginning of a loop and the cell content is zero
@@ -73,7 +77,7 @@ void main() {
 						innerloops--;
 					}else{
 						// Our loop counter went below 0 somehow
-						printf("Invalid innerloops value\n");
+						//printf("Invalid innerloops value\n");
 						return;
 					}
 				}
@@ -104,7 +108,7 @@ void main() {
 						innerloops--;
 					}else{
 						// Loop counter somehow hit negatives
-						printf("Invalid innerloops value\n");
+						//printf("Invalid innerloops value\n");
 						return;
 					}
 				}
