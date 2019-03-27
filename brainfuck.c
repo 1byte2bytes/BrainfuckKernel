@@ -14,7 +14,7 @@ int getNewCellPos(uint8_t direction) {
 	int32_t newpos = cellpos + direction;
 	uint32_t newpos2 = cellpos + direction;
 	if(newpos < 0) {
-		return sizeof(cells);
+		return sizeof(cells) - 1;
 	} else if(newpos2 > sizeof(cells)-1) {
 		return 0;
 	} else {
